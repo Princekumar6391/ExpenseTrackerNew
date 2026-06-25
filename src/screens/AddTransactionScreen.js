@@ -62,7 +62,12 @@ const AddTransactionScreen = ({
   };
 
   const handleChange = (key, value) => {
-    setPayload({ ...payload, [key]: value });
+    if (key === 'amount') {
+      const cleanedValue = value.replace(/[^0-9.]/g, '');
+      setPayload({ ...payload, [key]: cleanedValue });
+    } else {
+      setPayload({ ...payload, [key]: value });
+    }
   };
 
   const dateToString = date => {
@@ -91,14 +96,20 @@ const AddTransactionScreen = ({
   const handleSubmit = async () => {
     setIsLoading(true);
 
+    // Normalize amount to numeric value before validation and save
+    const normalizedAmount = Number(payload.amount);
+    const payloadToSend = {
+      ...payload,
+      amount: normalizedAmount,
+    };
+
     //Validation
-    if (validate() === false) {
+    if (normalizedAmount <= 0 || isNaN(normalizedAmount)) {
+      setErrMsg('Amount must be a number greater than 0');
       setIsLoading(false);
       return;
     }
 
-    //To add a reminder txn
-    let payloadToSend = { ...payload };
     if (showFutureDates) payloadToSend.remind = true;
 
     let isSuccessful;

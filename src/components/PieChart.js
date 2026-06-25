@@ -20,9 +20,11 @@ const PieChart = ({categories, total}) => {
         data={data}
         centerLabelComponent={() => (
           <View style={styles.centerLabel}>
-            <Text style={styles.gaugeText}>₹{total}</Text>
+            <Text style={styles.gaugeText}>₹{Number(total) ?? 0}</Text>
           </View>
         )}
+        innerCircleColor="transparent"
+        centerLabelStyle={styles.centerLabel}
       />
     </View>
   );

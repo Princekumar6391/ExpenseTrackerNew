@@ -21,9 +21,9 @@ const calculateTotalExpense = categories => {
   categories.map((item, index) => {
     let total = 0;
     item.transactions.map((subItem, subIndex) => {
-      total += subItem.amount;
+      total += Number(subItem.amount) || 0;
     });
-    categories[index].totalExpense = total;
+    categories[index].totalExpense = Number(total) || 0;
   });
   return categories;
 };
@@ -36,6 +36,7 @@ const getAllTransactions = categories => {
       subItem['categoryId'] = item.id;
       subItem['categoryName'] = capitalize(item.title);
       subItem['color'] = item.color;
+      subItem.amount = Number(subItem.amount) || 0;
       data.push(subItem);
     });
   });
@@ -63,7 +64,7 @@ const eliminateReminders = categories => {
 // Total expense of the user
 const netExpense = categories => {
   let total = 0;
-  for (let category of categories) total += category.totalExpense;
+  for (let category of categories) total += Number(category.totalExpense) || 0;
   return total;
 };
 
@@ -103,13 +104,13 @@ const dateFilterHelper = (type, value, categories) => {
             date.getMonth() === value.getMonth() &&
             date.getFullYear() === value.getFullYear()
           ) {
-            total += txn.amount;
+            total += Number(txn.amount) || 0;
             tempTransactions.push(txn);
           }
           break;
         case 'Year':
           if (date.getFullYear() === value) {
-            total += txn.amount;
+            total += Number(txn.amount) || 0;
             tempTransactions.push(txn);
           }
           break;
